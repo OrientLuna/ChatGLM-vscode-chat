@@ -1,6 +1,7 @@
 import * as assert from "assert";
 import * as vscode from "vscode";
-import { HuggingFaceChatModelProvider } from "../provider";
+import { ChatGLMRouterProvider } from "../provider";
+import { StatisticsManager } from "../statistics";
 import { convertMessages, convertTools, validateRequest, validateTools, tryParseJSONObject } from "../utils";
 
 interface OpenAIToolCall {
@@ -16,36 +17,67 @@ interface ConvertedMessage {
 	tool_call_id?: string;
 }
 
-suite("HuggingFace Chat Provider Extension", () => {
+suite("ChatGLM Router Extension", () => {
 	suite("provider", () => {
-		test("prepareLanguageModelChatInformation returns array (no key -> empty)", async () => {
-			const provider = new HuggingFaceChatModelProvider({
-				get: async () => undefined,
-				store: async () => {},
-				delete: async () => {},
-				onDidChange: (_listener: unknown) => ({ dispose() {} }),
-			} as unknown as vscode.SecretStorage, "GitHubCopilotChat/test VSCode/test");
+		test("prepareLanguageModelChatInformation returns array (no key -> shows placeholder)", async () => {
+			const context = {
+				globalState: {
+					get: async () => undefined,
+					update: async () => {},
+					keys: () => [],
+				},
+				secrets: {
+					get: async () => undefined,
+					store: async () => {},
+					delete: async () => {},
+					onDidChange: (_listener: unknown) => ({ dispose() {} }),
+				},
+			} as unknown as vscode.ExtensionContext;
+
+			const statsManager = new StatisticsManager(context);
+			const provider = new ChatGLMRouterProvider(
+				context.secrets,
+				statsManager,
+				"GitHubCopilotChat/test VSCode/test"
+			);
 
 			const infos = await provider.prepareLanguageModelChatInformation(
 				{ silent: true },
 				new vscode.CancellationTokenSource().token
 			);
 			assert.ok(Array.isArray(infos));
+			// When no API key, provider should still appear (placeholder or static) and indicate missing key
+			const hasPlaceholder = infos.some((i) => i.tooltip && i.tooltip.includes("API key"));
+			assert.ok(hasPlaceholder, "Expected at least one provider info to indicate missing API key");
 		});
 
 		test("provideTokenCount counts simple string", async () => {
-			const provider = new HuggingFaceChatModelProvider({
-				get: async () => undefined,
-				store: async () => {},
-				delete: async () => {},
-				onDidChange: (_listener: unknown) => ({ dispose() {} }),
-			} as unknown as vscode.SecretStorage, "GitHubCopilotChat/test VSCode/test");
+			const context = {
+				globalState: {
+					get: async () => undefined,
+					update: async () => {},
+					keys: () => [],
+				},
+				secrets: {
+					get: async () => undefined,
+					store: async () => {},
+					delete: async () => {},
+					onDidChange: (_listener: unknown) => ({ dispose() {} }),
+				},
+			} as unknown as vscode.ExtensionContext;
+
+			const statsManager = new StatisticsManager(context);
+			const provider = new ChatGLMRouterProvider(
+				context.secrets,
+				statsManager,
+				"GitHubCopilotChat/test VSCode/test"
+			);
 
 			const est = await provider.provideTokenCount(
 				{
 					id: "m",
 					name: "m",
-					family: "huggingface",
+					family: "chatglm-router",
 					version: "1.0.0",
 					maxInputTokens: 1000,
 					maxOutputTokens: 1000,
@@ -59,12 +91,26 @@ suite("HuggingFace Chat Provider Extension", () => {
 		});
 
 		test("provideTokenCount counts message parts", async () => {
-			const provider = new HuggingFaceChatModelProvider({
-				get: async () => undefined,
-				store: async () => {},
-				delete: async () => {},
-				onDidChange: (_listener: unknown) => ({ dispose() {} }),
-			} as unknown as vscode.SecretStorage, "GitHubCopilotChat/test VSCode/test");
+			const context = {
+				globalState: {
+					get: async () => undefined,
+					update: async () => {},
+					keys: () => [],
+				},
+				secrets: {
+					get: async () => undefined,
+					store: async () => {},
+					delete: async () => {},
+					onDidChange: (_listener: unknown) => ({ dispose() {} }),
+				},
+			} as unknown as vscode.ExtensionContext;
+
+			const statsManager = new StatisticsManager(context);
+			const provider = new ChatGLMRouterProvider(
+				context.secrets,
+				statsManager,
+				"GitHubCopilotChat/test VSCode/test"
+			);
 
 			const msg: vscode.LanguageModelChatMessage = {
 				role: vscode.LanguageModelChatMessageRole.User,
@@ -75,7 +121,7 @@ suite("HuggingFace Chat Provider Extension", () => {
 				{
 					id: "m",
 					name: "m",
-					family: "huggingface",
+					family: "chatglm-router",
 					version: "1.0.0",
 					maxInputTokens: 1000,
 					maxOutputTokens: 1000,
@@ -88,28 +134,42 @@ suite("HuggingFace Chat Provider Extension", () => {
 			assert.ok(est > 0);
 		});
 
-		test("provideLanguageModelChatResponse throws without API key", async () => {
-			const provider = new HuggingFaceChatModelProvider({
-				get: async () => undefined,
-				store: async () => {},
-				delete: async () => {},
-				onDidChange: (_listener: unknown) => ({ dispose() {} }),
-			} as unknown as vscode.SecretStorage, "GitHubCopilotChat/test VSCode/test");
+		test("provideLanguageModelChatResponse throws when silent=true and no API key", async () => {
+			const context = {
+				globalState: {
+					get: async () => undefined,
+					update: async () => {},
+					keys: () => [],
+				},
+				secrets: {
+					get: async () => undefined,
+					store: async () => {},
+					delete: async () => {},
+					onDidChange: (_listener: unknown) => ({ dispose() {} }),
+				},
+			} as unknown as vscode.ExtensionContext;
+
+			const statsManager = new StatisticsManager(context);
+			const provider = new ChatGLMRouterProvider(
+				context.secrets,
+				statsManager,
+				"GitHubCopilotChat/test VSCode/test"
+			);
 
 			let threw = false;
 			try {
 				await provider.provideLanguageModelChatResponse(
 					{
-						id: "m",
-						name: "m",
-						family: "huggingface",
+						id: "chatglm-coding:glm-4-plus",
+						name: "glm-4-plus",
+						family: "chatglm-router",
 						version: "1.0.0",
 						maxInputTokens: 1000,
 						maxOutputTokens: 1000,
 						capabilities: {},
 					} as unknown as vscode.LanguageModelChatInformation,
 					[],
-					{} as unknown as vscode.LanguageModelChatRequestHandleOptions,
+					{ silent: true } as unknown as vscode.LanguageModelChatRequestHandleOptions,
 					{ report: () => {} },
 					new vscode.CancellationTokenSource().token
 				);
@@ -117,6 +177,69 @@ suite("HuggingFace Chat Provider Extension", () => {
 				threw = true;
 			}
 			assert.ok(threw);
+		});
+
+		test("provideLanguageModelChatResponse prompts for API key when silent=false", async () => {
+			const context = {
+				globalState: {
+					get: async () => undefined,
+					update: async () => {},
+					keys: () => [],
+				},
+				secrets: {
+					get: async () => undefined,
+					store: async () => {},
+					delete: async () => {},
+					onDidChange: (_listener: unknown) => ({ dispose() {} }),
+				},
+			} as unknown as vscode.ExtensionContext;
+
+			const statsManager = new StatisticsManager(context);
+			const provider = new ChatGLMRouterProvider(
+				context.secrets,
+				statsManager,
+				"GitHubCopilotChat/test VSCode/test"
+			);
+
+			// Stub input box to return a fake API key
+			let asked = false;
+			const realShowInputBox = vscode.window.showInputBox;
+			(vscode.window as any).showInputBox = async () => {
+				asked = true;
+				return "fake-api-key";
+			};
+
+			// Stub global fetch to return a failing response so the call throws after prompting
+			const realFetch = (global as any).fetch;
+			(global as any).fetch = async () => ({ ok: false, status: 401, statusText: "Unauthorized", text: async () => "" });
+
+			let threw = false;
+			try {
+				await provider.provideLanguageModelChatResponse(
+					{
+						id: "chatglm-coding:glm-4-plus",
+						name: "glm-4-plus",
+						family: "chatglm-router",
+						version: "1.0.0",
+						maxInputTokens: 1000,
+						maxOutputTokens: 1000,
+						capabilities: {},
+					} as unknown as vscode.LanguageModelChatInformation,
+					[],
+					{ silent: false } as unknown as vscode.LanguageModelChatRequestHandleOptions,
+					{ report: () => {} },
+					new vscode.CancellationTokenSource().token
+				);
+			} catch {
+				threw = true;
+			}
+
+			// Restore stubs
+			(global as any).fetch = realFetch;
+			(vscode.window as any).showInputBox = realShowInputBox;
+
+			assert.ok(asked, "Expected showInputBox to be called");
+			assert.ok(threw, "Expected call to throw due to mocked fetch response");
 		});
 	});
 
@@ -207,12 +330,12 @@ suite("HuggingFace Chat Provider Extension", () => {
 			assert.deepEqual(out.tool_choice, { type: "function", function: { name: "only_tool" } });
 		});
 
-	test("validateTools rejects invalid names", () => {
-		const badTools: vscode.LanguageModelChatTool[] = [
-			{ name: "bad name!", description: "", inputSchema: {} },
-		];
-		assert.throws(() => validateTools(badTools));
-	});
+		test("validateTools rejects invalid names", () => {
+			const badTools: vscode.LanguageModelChatTool[] = [
+				{ name: "bad name!", description: "", inputSchema: {} },
+			];
+			assert.throws(() => validateTools(badTools));
+		});
 	});
 
 	suite("utils/validation", () => {

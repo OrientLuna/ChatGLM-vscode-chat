@@ -1,58 +1,150 @@
-# 🤗 Hugging Face Provider for GitHub Copilot Chat
+# ChatGLM Router for GitHub Copilot Chat
 
-![Demo](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/inference-providers-guides/demo_vscode.gif)
-
-Use frontier open LLMs like Kimi K2, DeepSeek V3.1, GLM 4.5 and more in VS Code with GitHub Copilot Chat powered by [Hugging Face Inference Providers](https://huggingface.co/docs/inference-providers/index) 🔥
+A VS Code extension that integrates **ChatGLM** (with dedicated Coding and General endpoints) into GitHub Copilot Chat.
 
 ---
 
-## ⚡ Quick Start
-1. Install the HF Copilot Chat extension [here](https://marketplace.visualstudio.com/items?itemName=HuggingFace.huggingface-vscode-chat).
-2. Open VS Code's chat interface.
-3. Click the model picker and click "Manage Models...".
-4. Select "Hugging Face" provider.
-5. Provide your Hugging Face Token, you can get one in your [settings page](https://huggingface.co/settings/tokens/new?ownUserPermissions=inference.serverless.write&tokenType=fineGrained). You only need to give it the inference.serverless permissions.
-6. Choose the models you want to add to the model picker. 🥳
+## Quick Start
 
-Each model entry also offers `cheapest` and `fastest` mode for each model. `fastest` selects the provider with highest throughput and `cheapest` selects the provider with lowest price per output token.
+1. Install the ChatGLM Router extension (search for "ChatGLM Router" in VS Code extensions)
+2. Open VS Code's chat interface (Ctrl/Cmd + Shift + A)
+3. Click the model picker and click "Manage Models..."
+4. Select "ChatGLM Router" provider
+5. Provide your ChatGLM API key (get one from [https://open.bigmodel.cn/](https://open.bigmodel.cn/))
+6. Choose the models you want to add to the model picker
 
-## ✨ Why use the Hugging Face provider in Copilot
-* Access [SoTA open-source LLMs](https://huggingface.co/models?pipeline_tag=text-generation&inference_provider=cerebras,together,fireworks-ai,nebius,novita,sambanova,groq,hyperbolic,nscale,fal-ai,cohere,replicate,scaleway,black-forest-labs,ovhcloud&sort=trending) with tool calling capabilities.
-* Single API to switch between multiple providers: Cerebras, Cohere, Fireworks AI, Groq, HF Inference, Hyperbolic, Nebius, Novita, Nscale, SambaNova, Together AI, and more. See the full list of partners in the [Inference Providers docs](https://huggingface.co/docs/inference-providers/index#partners).
-* Built for high availability (across providers) and low latency.
-* Transparent pricing: what the provider charges is what you pay.
+## Available Models
 
-💡 The free Hugging Face user tier gives you a small amount of monthly inference credits to experiment. Upgrade to [Hugging Face PRO](https://huggingface.co/pro) or [Enterprise](https://huggingface.co/enterprise) for $2 in monthly credits plus pay-as-you-go access across all providers!
+### ChatGLM Coding (Default)
+- Optimized for code generation and programming tasks
+- Endpoint: `https://open.bigmodel.cn/api/coding/paas/v4`
 
----
+### ChatGLM General (Optional)
+- For general chat and non-coding tasks
+- Endpoint: `https://open.bigmodel.cn/api/paas/v4/`
+- Enable in settings if needed (disabled by default)
+- Same models available, optimized for conversational AI
 
-## Requirements
-* VS Code 1.104.0 or higher.
-* Hugging Face access token with `inference.serverless` permissions.
 
-## 🛠️ Development
+## Configuration
+
+### API Key
+
+Configure your ChatGLM API key via the command palette:
+- Press `Ctrl/Cmd + Shift + P`
+- Run "ChatGLM Router: Manage ChatGLM Router"
+- Select "ChatGLM (Coding & General)"
+- Enter your API key from [https://open.bigmodel.cn/](https://open.bigmodel.cn/)
+
+### Clear API Key
+
+Remove your stored ChatGLM API key:
+- Run `ChatGLM Router: Clear ChatGLM API Key` to delete the stored API key
+- You will need to re-enter your API key to use the extension after clearing it
+
+### Model Selection
+
+Models are prefixed with their provider:
+- `chatglm-coding:glm-4-plus` - ChatGLM Coding endpoint (default, recommended for VS Code)
+- `chatglm-general:glm-4-plus` - ChatGLM General endpoint (enable in settings first)
+
+Note: If a ChatGLM provider does not have an API key configured, it will still appear in the model picker with a tooltip **"API key not configured"**. Selecting or using that model will prompt you to enter an API key when the caller allows prompting (i.e., when not running in silent mode).
+
+### Settings
+
+Configure in VS Code Settings under `chatglmRouter`:
+
+| Setting | Options | Default | Description |
+|---------|---------|---------|-------------|
+| `defaultProvider` | chatglm-coding, chatglm-general | chatglm-coding | Default provider to use |
+| `enabledProviders` | Array of providers | [chatglm-coding] | Which providers to enable |
+| `statistics.enabled` | boolean | true | Enable usage statistics tracking |
+
+**Note**: ChatGLM General is disabled by default. Enable it in settings if you need conversational AI capabilities.
+
+## Usage Statistics
+
+Track your API usage with built-in statistics:
+
+### View Statistics
+- Run "ChatGLM Router: Show Usage Statistics" command
+- View total requests and tokens per provider
+- See detailed per-model usage
+
+### Reset Statistics
+- Run "ChatGLM Router: Reset Usage Statistics" command
+- Clears all stored usage data
+
+### Statistics in Output
+- Run "ChatGLM Router: Show Statistics in Output" command
+- Displays detailed statistics in an output channel
+
+**Note**: Statistics are stored locally in VS Code's global state and are estimates (4 chars ≈ 1 token).
+
+## Development
+
 ```bash
-git clone https://github.com/huggingface/huggingface-vscode-chat
-cd huggingface-vscode-chat
+git clone https://github.com/OrientLuna/ChatGLM-vscode-chat
+cd ChatGLM-vscode-chat
 npm install
 npm run compile
 ```
-Press F5 to launch an Extension Development Host.
 
-Common scripts:
-* Build: `npm run compile`
-* Watch: `npm run watch`
-* Lint: `npm run lint`
-* Format: `npm run format`
+Press **F5** to launch an Extension Development Host for testing.
 
----
+### Common Scripts
+- **Build**: `npm run compile`
+- **Watch**: `npm run watch`
+- **Lint**: `npm run lint`
+- **Format**: `npm run format`
+- **Test**: `npm run test`
+- **Package**: `npm run package` (generates .vsix file)
 
-## 📚 Learn more
-* Inference Providers documentation: https://huggingface.co/docs/inference-providers/index
-* VS Code Chat Provider API: https://code.visualstudio.com/api/extension-guides/ai/language-model-chat-provider
+## Architecture
 
----
+- **Multi-Provider Design**: Supports ChatGLM Coding and ChatGLM General
+- **Provider Registry**: Built-in providers in `src/config.ts`
+- **Statistics Tracking**: Usage data tracked in `src/statistics.ts`
+- **API-First Model List**: Fetches latest models from provider APIs
+- **Streaming Response**: SSE-like streaming with tool call support
 
-## Support & License
-* Open issues: https://github.com/huggingface/huggingface-vscode-chat/issues
-* License: MIT License Copyright (c) 2025 Hugging Face
+## Troubleshooting
+
+### Models not appearing
+1. Check that your ChatGLM API key is configured correctly
+2. Run "ChatGLM Router: Manage ChatGLM Router" to verify API key
+3. Check VS Code developer console for errors (Help → Toggle Developer Tools)
+
+### API Errors
+1. Verify your API key has the required permissions
+2. Check that the selected model is available on your chosen endpoint
+3. Ensure you have sufficient API credits/quotas
+
+### ChatGLM Coding vs General
+- Use **ChatGLM Coding** for code-related tasks (recommended for VS Code)
+- Use **ChatGLM General** for conversational AI and non-coding tasks
+- Enable ChatGLM General in settings: `chatglmRouter.enabledProviders` → add `chatglm-general`
+
+## Requirements
+
+## Architecture
+
+- **Multi-Provider Design**: Supports ChatGLM Coding and ChatGLM General
+- **Provider Registry**: Built-in providers in `src/config.ts`
+- **Statistics Tracking**: Usage data tracked in `src/statistics.ts`
+- **API-First Model List**: Fetches latest models from provider APIs
+- **Streaming Response**: SSE-like streaming with tool call support
+
+## Requirements
+
+- VS Code 1.104.0 or higher
+- ChatGLM API key from [https://open.bigmodel.cn/](https://open.bigmodel.cn/)
+
+## License
+
+MIT License © OrientLuna
+
+## Support
+
+- Report issues: [GitHub Issues](https://github.com/OrientLuna/ChatGLM-vscode-chat/issues)
+- ChatGLM Documentation: [https://open.bigmodel.cn/](https://open.bigmodel.cn/)

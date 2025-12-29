@@ -27,7 +27,7 @@ export interface OpenAIChatMessage {
 }
 
 /**
- * A single underlying provider (e.g., together, groq) for a model.
+ * A single underlying provider for a model (used by some APIs).
  */
 export interface HFProvider {
 	provider: string;
@@ -38,13 +38,16 @@ export interface HFProvider {
 }
 
 /**
- * A model entry returned by the Hugging Face router models endpoint.
+ * Model architecture information.
  */
 export interface HFArchitecture {
     input_modalities?: string[];
     output_modalities?: string[];
 }
 
+/**
+ * A model entry returned by the models listing endpoint.
+ */
 export interface HFModelItem {
     id: string;
     object: string;
@@ -55,16 +58,16 @@ export interface HFModelItem {
 }
 
 /**
- * Supplemental model info from the Hugging Face hub API.
+ * Supplemental model info (deprecated, previously fetched from hub API).
  */
-// Deprecated: extra model info was previously fetched from the hub API
+// Deprecated: extra model info was previously fetched from an external API
 export interface HFExtraModelInfo {
     id: string;
     pipeline_tag?: string;
 }
 
 /**
- * Response envelope for the router models listing.
+ * Response envelope for the models listing endpoint.
  */
 export interface HFModelsResponse {
 	object: string;

@@ -1,12 +1,12 @@
 {
-	"name": "huggingface-vscode-chat",
-	"publisher": "HuggingFace",
-	"displayName": "Hugging Face Provider for GitHub Copilot Chat",
-	"description": "An extension that integrates Hugging Face Inference Providers into GitHub Copilot Chat",
+	"name": "chatglm-router-vscode",
+	"publisher": "OrientLuna",
+	"displayName": "ChatGLM Router for GitHub Copilot Chat",
+	"description": "A multi-provider extension that integrates ChatGLM (with Coding and General endpoints) and custom OpenAI-compatible providers into GitHub Copilot Chat",
 	"icon": "assets/logo.png",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/huggingface/huggingface-vscode-chat"
+		"url": "https://github.com/OrientLuna/ChatGLM-vscode-chat"
 	},
 	"version": "0.1.0",
 	"engines": {
@@ -22,35 +22,77 @@
 	},
 	"badges": [
 		{
-		"url": "https://img.shields.io/github/stars/huggingface/huggingface-vscode-chat?style=social",
-		"description": "Star huggingface-vscode-chat on Github",
-		"href": "https://github.com/huggingface/huggingface-vscode-chat"
-		},
-		{
-		"url": "https://img.shields.io/twitter/follow/huggingface?style=social",
-		"description": "Follow Hugging Face on Twitter",
-		"href": "https://x.com/huggingface"
+			"url": "https://img.shields.io/github/stars/OrientLuna/ChatGLM-vscode-chat?style=social",
+			"description": "Star ChatGLM-vscode-chat on Github",
+			"href": "https://github.com/OrientLuna/ChatGLM-vscode-chat"
 		}
 	],
-	"homepage": "https://huggingface.co/docs/inference-providers/en/index",
+	"homepage": "https://github.com/OrientLuna/ChatGLM-vscode-chat",
 	"bugs": {
-		"url": "https://github.com/huggingface/huggingface-vscode-chat/issues"
+		"url": "https://github.com/OrientLuna/ChatGLM-vscode-chat/issues"
 	},
 	"license": "MIT",
+	"activationEvents": [
+		"onStartupFinished"
+	],
 	"contributes": {
 		"languageModelChatProviders": [
 			{
-				"vendor": "huggingface",
-				"displayName": "Hugging Face",
-				"managementCommand": "huggingface.manage"
+				"vendor": "chatglm-router",
+				"displayName": "ChatGLM Router",
+				"managementCommand": "chatglmRouter.manage"
 			}
 		],
 		"commands": [
 			{
-				"command": "huggingface.manage",
-				"title": "Manage Hugging Face Provider"
+				"command": "chatglmRouter.manage",
+				"title": "Manage ChatGLM Router"
+			},
+			{
+				"command": "chatglmRouter.showStatistics",
+				"title": "Show Usage Statistics"
+			},
+			{
+				"command": "chatglmRouter.resetStatistics",
+				"title": "Reset Usage Statistics"
+			},
+			{
+				"command": "chatglmRouter.showStatisticsInOutput",
+				"title": "Show Statistics in Output"
+			},
+			{
+				"command": "chatglmRouter.clearApiKey",
+				"title": "Clear ChatGLM API Key"
 			}
-		]
+		],
+		"configuration": {
+			"title": "ChatGLM Router",
+			"properties": {
+				"chatglmRouter.defaultProvider": {
+					"type": "string",
+					"enum": ["chatglm-coding", "chatglm-general"],
+					"default": "chatglm-coding",
+					"description": "Default provider (ChatGLM Coding is recommended for VS Code)",
+					"enumDescriptions": [
+						"ChatGLM Coding endpoint - optimized for code generation",
+						"ChatGLM General endpoint - for general chat"
+					]
+				},
+				"chatglmRouter.enabledProviders": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"default": ["chatglm-coding"],
+					"description": "Enabled providers (chatglm-general disabled by default)"
+				},
+				"chatglmRouter.statistics.enabled": {
+					"type": "boolean",
+					"default": true,
+					"description": "Enable usage statistics tracking"
+				}
+			}
+		}
 	},
 	"main": "./out/extension.js",
 	"scripts": {
@@ -62,7 +104,9 @@
 		"lint": "eslint",
 		"format": "prettier --write .",
 		"watch": "tsc -watch -p ./",
-		"test": "pnpm run compile && vscode-test"
+		"test": "npm run compile && vscode-test",
+		"package": "vsce package",
+		"publish": "vsce publish"
 	},
 	"dependencies": {},
 	"devDependencies": {
@@ -79,5 +123,5 @@
 		"typescript": "^5.9.2",
 		"typescript-eslint": "^8.39.0"
 	},
-	"packageManager": "pnpm@8.15.4+sha512.0bd3a9be9eb0e9a692676deec00a303ba218ba279d99241475616b398dbaeedd11146f92c2843458f557b1d127e09d4c171e105bdcd6b61002b39685a8016b9e"
+	"packageManager": "npm@10.9.2"
 }

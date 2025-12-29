@@ -1,11 +1,40 @@
-.vscode/**
-.vscode-test/**
-src/**
+# Source files
+src/
+tsconfig.json
+
+# VS Code specific
+.vscode/
+.vscode-test/
+.vscode-test.mjs
+
+# Claude Code AI
+.claude/
+CLAUDE.md
+
+# Dev configs
+eslint.config.mjs
+.prettierrc
+.prettierignore
+
+# Dependencies
+node_modules/
+
+# Build output (keep out/ for extension)
+*.vsix
+
+# Git
+.git/
 .gitignore
-.yarnrc
-webpack.config.js
-vsc-extension-quickstart.md
-**/tsconfig.json
-**/.eslintrc.json
-**/*.map
-**/*.ts
+.github/
+
+# Chinese README (not needed in extension)
+README_CN.md
+
+# Logs
+*.log
+
+# Test files
+**/test/**/*.test.js
+
+# TypeScript definitions (generated)
+vscode.d.ts
