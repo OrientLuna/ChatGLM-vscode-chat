@@ -1,16 +1,26 @@
 # ChatGLM Router for GitHub Copilot Chat
 
-A VS Code extension that integrates **ChatGLM** (with dedicated Coding and General endpoints) into GitHub Copilot Chat.
+A VS Code extension forked from Hugging Face's `huggingface-vscode-chat` project, modified to integrate **ChatGLM** (with Coding and General endpoints) into GitHub Copilot Chat.
+
+---
+
+## Compatibility
+
+*Due to limited testing resources, compatibility testing may not be exhaustive. Please report any issues on GitHub or in the comments section, and I will address them promptly.*
+
+## AI Assistance Statement
+
+*The development of this plugin utilized ChatGLM Coding to complete most of the API adaptation work.*
 
 ---
 
 ## Quick Start
 
 1. Install the ChatGLM Router extension (search for "ChatGLM Router" in VS Code extensions)
-2. Open VS Code's chat interface (Ctrl/Cmd + Shift + A)
+2. Open VS Code Copilot Chat interface (Ctrl/Cmd + Shift + A)
 3. Click the model picker and click "Manage Models..."
-4. Select "ChatGLM Router" provider
-5. Provide your ChatGLM API key (get one from [https://open.bigmodel.cn/](https://open.bigmodel.cn/))
+4. Find "ChatGLM Router" and click "Manage ChatGLM Router"
+5. Select Provider (GLM Coding) and enter API Key (get one from [https://open.bigmodel.cn/](https://open.bigmodel.cn/))
 6. Choose the models you want to add to the model picker
 
 ## Available Models
@@ -25,6 +35,9 @@ A VS Code extension that integrates **ChatGLM** (with dedicated Coding and Gener
 - Enable in settings if needed (disabled by default)
 - Same models available, optimized for conversational AI
 
+### Custom Providers (Coming Soon)
+- Custom provider support is under development
+- For custom API needs, please refer to `OAI Compatible Provider for Copilot`
 
 ## Configuration
 
@@ -39,7 +52,7 @@ Configure your ChatGLM API key via the command palette:
 ### Clear API Key
 
 Remove your stored ChatGLM API key:
-- Run `ChatGLM Router: Clear ChatGLM API Key` to delete the stored API key
+- Run "ChatGLM Router: Clear ChatGLM API Key" to delete the stored API key
 - You will need to re-enter your API key to use the extension after clearing it
 
 ### Model Selection
@@ -48,7 +61,7 @@ Models are prefixed with their provider:
 - `chatglm-coding:glm-4-plus` - ChatGLM Coding endpoint (default, recommended for VS Code)
 - `chatglm-general:glm-4-plus` - ChatGLM General endpoint (enable in settings first)
 
-Note: If a ChatGLM provider does not have an API key configured, it will still appear in the model picker with a tooltip **"API key not configured"**. Selecting or using that model will prompt you to enter an API key when the caller allows prompting (i.e., when not running in silent mode).
+**Note**: If a ChatGLM provider does not have an API key configured, it will still appear in the model picker. Selecting or using that model will prompt you to enter an API key (when not in silent mode).
 
 ### Settings
 
@@ -124,16 +137,6 @@ Press **F5** to launch an Extension Development Host for testing.
 - Use **ChatGLM Coding** for code-related tasks (recommended for VS Code)
 - Use **ChatGLM General** for conversational AI and non-coding tasks
 - Enable ChatGLM General in settings: `chatglmRouter.enabledProviders` → add `chatglm-general`
-
-## Requirements
-
-## Architecture
-
-- **Multi-Provider Design**: Supports ChatGLM Coding and ChatGLM General
-- **Provider Registry**: Built-in providers in `src/config.ts`
-- **Statistics Tracking**: Usage data tracked in `src/statistics.ts`
-- **API-First Model List**: Fetches latest models from provider APIs
-- **Streaming Response**: SSE-like streaming with tool call support
 
 ## Requirements
 

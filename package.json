@@ -4,11 +4,12 @@
 	"displayName": "ChatGLM Router for GitHub Copilot Chat",
 	"description": "A multi-provider extension that integrates ChatGLM (with Coding and General endpoints) and custom OpenAI-compatible providers into GitHub Copilot Chat",
 	"icon": "assets/logo.png",
+	"readme": "README.zh-CN.md",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/OrientLuna/ChatGLM-vscode-chat"
 	},
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"engines": {
 		"vscode": "^1.104.0"
 	},

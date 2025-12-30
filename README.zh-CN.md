@@ -1,21 +1,31 @@
 # ChatGLM Router for GitHub Copilot Chat
 
-一款将 **ChatGLM**（包含GLM Coding和通用端）集成到 GitHub Copilot Chat 的 VS Code 扩展。
+本插件fork自 Hugging Face 发布的`huggingface-vscode-chat`项目，修改了默认API，将 **ChatGLM**（包含GLM Coding套餐和通用端）集成给 GitHub Copilot Chat 使用。
+
+---
+
+## 兼容性
+
+*因本人设备有限，暂时无法充分测试兼容性，各位遇到问题可以随时在Github或者评论区提出，我会及时跟进修改*
+
+## AI辅助声明
+
+*插件的开发过程使用ChatGLM Coding完成了大部分API适配工作*
 
 ---
 
 ## 快速开始
 
-1. 在 VS Code 扩展商店中搜索并安装 "ChatGLM Router"
-2. 打开 VS Code 聊天界面 (Ctrl/Cmd + Shift + A)
+1. 在 VS Code 扩展商店中搜索并安装 "ChatGLM Router for GitHub Copilot Chat"
+2. 打开 VS Code Copilot聊天界面 (Ctrl/Cmd + Shift + A)
 3. 点击模型选择器，然后点击 "Manage Models..."
-4. 选择 "ChatGLM Router" 提供商
-5. 输入您的 ChatGLM API Key（从 [https://open.bigmodel.cn/](https://open.bigmodel.cn/) 获取）
+4. 找到"ChatGLM Router" ，点击"Manage ChatGLM Router"
+5. 选择Provider（GLM Coding），输入API Key（从 [https://open.bigmodel.cn/](https://open.bigmodel.cn/) 获取）
 6. 选择要添加到模型选择器的模型
 
 ## 可用模型
 
-### ChatGLM 编程端（默认）
+### ChatGLM Coding套餐（默认）
 - 针对代码生成和编程任务优化
 - 端点：`https://open.bigmodel.cn/api/coding/paas/v4`
 
@@ -25,9 +35,9 @@
 - 需要在设置中启用（默认禁用）
 - 提供相同的模型，针对对话式 AI 优化
 
-### 自定义提供者（高级）
-- 已移除：自定义 provider 支持不再可用，所有自定义 provider 配置相关设置已被删除。
-
+### 自定义提供者（即将推出）
+- 自定义提供者支持正在开发中
+- 如需自定义 API，请参考 `OAI Compatible Provider for Copilot`
 
 ## 配置
 
@@ -42,7 +52,7 @@
 ### 清除 API Key
 
 删除已存储的 ChatGLM API Key：
-- 运行 `ChatGLM Router: Clear ChatGLM API Key` 来删除存储的 API Key
+- 运行 "ChatGLM Router: Clear ChatGLM API Key" 来删除存储的 API Key
 - 清除后需要重新输入 API Key 才能使用扩展功能
 
 ### 模型选择
@@ -51,7 +61,7 @@
 - `chatglm-coding:glm-4-plus` - ChatGLM 编程端（默认，推荐用于 VS Code）
 - `chatglm-general:glm-4-plus` - ChatGLM 通用端（需先在设置中启用）
 
-注意：如果 ChatGLM 提供商尚未配置 API Key，该提供商仍会显示在模型选择器中，并带有 **“API key not configured”** 的工具提示。选择或使用该模型时（非静默调用）会提示输入 API Key。
+**注意**：如果 ChatGLM 提供商尚未配置 API Key，该提供商仍会显示在模型选择器中。选择或使用该模型时会提示输入 API Key（非静默模式下）。
 
 ### 设置
 
@@ -62,8 +72,6 @@
 | `defaultProvider` | chatglm-coding, chatglm-general | chatglm-coding | 默认使用的提供商 |
 | `enabledProviders` | 提供商数组 | [chatglm-coding] | 启用的提供商 |
 | `statistics.enabled` | 布尔值 | true | 启用使用统计跟踪 |
-
-**注意**：ChatGLM 通用端默认禁用。如需对话式 AI 功能，请在设置中启用。
 
 ## 使用统计
 
@@ -105,8 +113,8 @@ npm run compile
 
 ## 架构
 
-- **多提供商设计**：支持 ChatGLM 编程端、ChatGLM 通用端和自定义 OpenAI 兼容提供商
-- **提供商注册**：内置提供商在 `src/config.ts` 中配置，自定义提供商来自用户设置
+- **多提供商设计**：支持 ChatGLM 编程端和 ChatGLM 通用端
+- **提供商注册**：内置提供商在 `src/config.ts` 中配置
 - **统计跟踪**：在 `src/statistics.ts` 中跟踪使用数据
 - **API 优先的模型列表**：从提供商 API 获取最新模型
 - **流式响应**：支持工具调用的 SSE 类流式响应
