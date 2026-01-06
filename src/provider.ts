@@ -133,13 +133,13 @@ export class ChatGLMRouterProvider implements LanguageModelChatProvider {
 			if (apiKey) {
 				try {
 					const { models } = await this.fetchModels(provider, apiKey);
-					const infos = this.buildModelInformation(models, provider);
+					const infos = await this.buildModelInformation(models, provider);
 					allInfos.push(...infos);
 				} catch (error) {
 					console.error(`[ChatGLM Router] Failed to fetch models from ${provider.id}:`, error);
 					if (provider.id.startsWith("chatglm")) {
 						const staticModels = getStaticModelsForProvider(provider.id);
-					const staticInfos = this.buildModelInformation(staticModels, provider, { tooltipSuffix: "API key not configured" });
+					const staticInfos = await this.buildModelInformation(staticModels, provider, { tooltipSuffix: "API key not configured" });
 						allInfos.push(...staticInfos);
 					}
 				}
@@ -148,7 +148,7 @@ export class ChatGLMRouterProvider implements LanguageModelChatProvider {
 				if (provider.id.startsWith("chatglm")) {
 					const staticModels = getStaticModelsForProvider(provider.id);
 					if (staticModels.length > 0) {
-						const staticInfos = this.buildModelInformation(staticModels, provider, { tooltipSuffix: "API key not configured" });
+						const staticInfos = await this.buildModelInformation(staticModels, provider, { tooltipSuffix: "API key not configured" });
 						allInfos.push(...staticInfos);
 					} else {
 						// Add a placeholder entry so the provider is visible
@@ -209,12 +209,16 @@ export class ChatGLMRouterProvider implements LanguageModelChatProvider {
 	 * @param provider Provider configuration
 	 * @returns Array of model information entries
 	 */
-	private buildModelInformation(
+	private async buildModelInformation(
 		models: HFModelItem[],
 		provider: ProviderConfig,
 		opts?: { tooltipSuffix?: string }
-	): LanguageModelChatInformation[] {
+	): Promise<LanguageModelChatInformation[]> {
 		const infos: LanguageModelChatInformation[] = [];
+
+		// Check if model tooltip statistics are enabled
+		const config = vscode.workspace.getConfiguration("chatglmRouter.statistics");
+		const enableModelTooltip = config.get<boolean>("modelTooltip.enabled", true);
 
 		for (const m of models) {
 			// For all providers (ChatGLM and custom), create simple entries without variants
@@ -222,8 +226,24 @@ export class ChatGLMRouterProvider implements LanguageModelChatProvider {
 			const maxOutput = provider.defaultMaxTokens;
 			const maxInput = Math.max(1, contextLen - maxOutput);
 
-			const tooltipBase = `${provider.name}`;
-			const tooltip = opts?.tooltipSuffix ? `${tooltipBase} — ${opts.tooltipSuffix}` : tooltipBase;
+			// Build tooltip with statistics
+			let tooltip = `${provider.name}`;
+			if (opts?.tooltipSuffix) {
+				tooltip += ` — ${opts.tooltipSuffix}`;
+			}
+
+			// Append usage statistics if enabled
+			if (enableModelTooltip) {
+				const stats = await this.statsManager.getModelStats(provider.id, m.id);
+				if (stats && stats.requestCount > 0) {
+					const totalTokens = stats.totalInputTokens + stats.totalOutputTokens;
+					const timeAgo = StatisticsManager.formatTimeAgo(stats.lastUsed);
+
+					tooltip += `\n━━━━━━━━━━━━━━`;
+					tooltip += `\n已用: ${StatisticsManager.formatTokenCount(totalTokens, 'full')} tokens (${stats.requestCount} 请求)`;
+					tooltip += `\n最后使用: ${timeAgo}`;
+				}
+			}
 
 			infos.push({
 				id: `${provider.id}:${m.id}`,

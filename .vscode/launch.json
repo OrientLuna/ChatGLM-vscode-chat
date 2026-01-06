@@ -6,16 +6,35 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Run Extension",
+			"name": "Run Extension (Clean + Copilot)",
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}"
+				"--extensionDevelopmentPath=${workspaceFolder}",
+				"--user-data-dir=${workspaceFolder}/.vscode-test/user-data",
+				"--disable-extension=vscodevim.vim"
 			],
 			"outFiles": [
 				"${workspaceFolder}/out/**/*.js"
 			],
-			"preLaunchTask": "${defaultBuildTask}"
+			"preLaunchTask": "clean-all",
+			"env": {
+				"VSCODE_FORCE_USER_ENVIRONMENT": "1"
+			}
+		},
+		{
+			"name": "Run Extension",
+			"type": "extensionHost",
+			"request": "launch",
+			"args": [
+				"--extensionDevelopmentPath=${workspaceFolder}",
+				"--user-data-dir=${workspaceFolder}/.vscode-test/user-data",
+				"--disable-extensions"
+			],
+			"outFiles": [
+				"${workspaceFolder}/out/**/*.js"
+			],
+			"preLaunchTask": "watch-with-clean"
 		},
 		{
 			"name": "Extension Tests",
@@ -23,7 +42,8 @@
 			"request": "launch",
 			"args": [
 				"--extensionDevelopmentPath=${workspaceFolder}",
-				"--extensionTestsPath=${workspaceFolder}/out/test/suite/index"
+				"--extensionTestsPath=${workspaceFolder}/out/test/suite/index",
+				"--user-data-dir=${workspaceFolder}/.vscode-test/user-data",
 			],
 			"outFiles": [
 				"${workspaceFolder}/out/**/*.js",

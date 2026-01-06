@@ -43,6 +43,11 @@ export class StatisticsViewProvider {
 					description: "Reload and display current statistics",
 					action: "refresh" as const,
 				},
+				{
+					label: "$(close) 关闭",
+					description: "关闭统计视图",
+					action: "close" as const,
+				},
 			],
 			{
 				placeHolder: "ChatGLM Router Usage Statistics",
@@ -52,7 +57,10 @@ export class StatisticsViewProvider {
 		if (choice?.action === "providers") {
 			await this.showProviderList();
 		} else if (choice?.action === "refresh") {
+			await vscode.window.showInformationMessage("统计已刷新");
 			await this.showStatistics();
+		} else if (choice?.action === "close") {
+			return; // 明确关闭对话框
 		}
 	}
 

@@ -2,17 +2,28 @@
 	"name": "chatglm-router-vscode",
 	"publisher": "OrientLuna",
 	"displayName": "ChatGLM Router for GitHub Copilot Chat",
-	"description": "A multi-provider extension that integrates ChatGLM (with Coding and General endpoints) and custom OpenAI-compatible providers into GitHub Copilot Chat",
+	"description": "将 ChatGLM（Coding 套餐和 General 通用端）集成到 GitHub Copilot Chat，针对代码生成优化",
 	"icon": "assets/logo.png",
 	"readme": "README.zh-CN.md",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/OrientLuna/ChatGLM-vscode-chat"
 	},
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"engines": {
 		"vscode": "^1.104.0"
 	},
+	"keywords": [
+		"chatglm",
+		"glm",
+		"ai",
+		"copilot",
+		"chat",
+		"code generation",
+		"chinese ai",
+		"智谱",
+		"编程"
+	],
 	"categories": [
 		"AI",
 		"Chat"
@@ -47,23 +58,23 @@
 		"commands": [
 			{
 				"command": "chatglmRouter.manage",
-				"title": "Manage ChatGLM Router"
+				"title": "管理 ChatGLM Router"
 			},
 			{
 				"command": "chatglmRouter.showStatistics",
-				"title": "Show Usage Statistics"
+				"title": "显示使用统计"
 			},
 			{
 				"command": "chatglmRouter.resetStatistics",
-				"title": "Reset Usage Statistics"
+				"title": "重置使用统计"
 			},
 			{
 				"command": "chatglmRouter.showStatisticsInOutput",
-				"title": "Show Statistics in Output"
+				"title": "在输出中显示统计"
 			},
 			{
 				"command": "chatglmRouter.clearApiKey",
-				"title": "Clear ChatGLM API Key"
+				"title": "清除 ChatGLM API Key"
 			}
 		],
 		"configuration": {
@@ -73,10 +84,10 @@
 					"type": "string",
 					"enum": ["chatglm-coding", "chatglm-general"],
 					"default": "chatglm-coding",
-					"description": "Default provider (ChatGLM Coding is recommended for VS Code)",
+					"description": "默认提供商（ChatGLM Coding 套餐推荐用于 VS Code）",
 					"enumDescriptions": [
-						"ChatGLM Coding endpoint - optimized for code generation",
-						"ChatGLM General endpoint - for general chat"
+						"ChatGLM Coding 套餐 - 针对代码生成优化",
+						"ChatGLM General 通用端 - 用于通用对话"
 					]
 				},
 				"chatglmRouter.enabledProviders": {
@@ -85,12 +96,49 @@
 						"type": "string"
 					},
 					"default": ["chatglm-coding"],
-					"description": "Enabled providers (chatglm-general disabled by default)"
+					"description": "启用的提供商（chatglm-general 默认禁用）"
 				},
 				"chatglmRouter.statistics.enabled": {
 					"type": "boolean",
 					"default": true,
-					"description": "Enable usage statistics tracking"
+					"description": "启用使用统计跟踪"
+				},
+				"chatglmRouter.statistics.statusBar.enabled": {
+					"type": "boolean",
+					"default": true,
+					"description": "在状态栏显示用量统计"
+				},
+				"chatglmRouter.statistics.statusBar.displayMode": {
+					"type": "string",
+					"enum": ["normal", "compact", "minimal"],
+					"default": "normal",
+					"description": "状态栏显示模式",
+					"enumDescriptions": [
+						"完整显示（包含图标和完整描述）",
+						"紧凑显示（简化文本）",
+						"最小化（仅显示关键数字）"
+					]
+				},
+				"chatglmRouter.statistics.statusBar.timeRange": {
+					"type": "string",
+					"enum": ["week", "month", "both"],
+					"default": "both",
+					"description": "状态栏显示的时间范围",
+					"enumDescriptions": [
+						"仅显示本周统计",
+						"仅显示本月统计",
+						"同时显示本周和本月统计（在 tooltip 中）"
+					]
+				},
+				"chatglmRouter.statistics.statusBar.showRequestCount": {
+					"type": "boolean",
+					"default": true,
+					"description": "在状态栏显示请求数"
+				},
+				"chatglmRouter.statistics.modelTooltip.enabled": {
+					"type": "boolean",
+					"default": true,
+					"description": "在模型选择器中显示使用统计"
 				}
 			}
 		}

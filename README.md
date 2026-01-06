@@ -14,6 +14,10 @@ A VS Code extension forked from Hugging Face's `huggingface-vscode-chat` project
 
 ---
 
+## Demo
+
+![Usage Demo](assets/usage.gif)
+
 ## Quick Start
 
 1. Install the ChatGLM Router extension (search for "ChatGLM Router" in VS Code extensions)
@@ -58,8 +62,8 @@ Remove your stored ChatGLM API key:
 ### Model Selection
 
 Models are prefixed with their provider:
-- `chatglm-coding:glm-4-plus` - ChatGLM Coding endpoint (default, recommended for VS Code)
-- `chatglm-general:glm-4-plus` - ChatGLM General endpoint (enable in settings first)
+- `glm-4.7 (ChatGLM Coding)` - ChatGLM Coding endpoint (default, recommended for VS Code)
+- `glm-4.7 (ChatGLM General)` - ChatGLM General endpoint (enable in settings first)
 
 **Note**: If a ChatGLM provider does not have an API key configured, it will still appear in the model picker. Selecting or using that model will prompt you to enter an API key (when not in silent mode).
 
@@ -72,17 +76,33 @@ Configure in VS Code Settings under `chatglmRouter`:
 | `defaultProvider` | chatglm-coding, chatglm-general | chatglm-coding | Default provider to use |
 | `enabledProviders` | Array of providers | [chatglm-coding] | Which providers to enable |
 | `statistics.enabled` | boolean | true | Enable usage statistics tracking |
+| `statistics.statusBar.enabled` | boolean | true | Show statistics in status bar |
+| `statistics.modelTooltip.enabled` | boolean | true | Show usage in model tooltips |
 
 **Note**: ChatGLM General is disabled by default. Enable it in settings if you need conversational AI capabilities.
+
+For detailed statistics settings, see [Statistics Settings](#statistics-settings) below.
 
 ## Usage Statistics
 
 Track your API usage with built-in statistics:
 
+### Real-time Status Bar
+- Weekly and monthly token usage displayed in VS Code status bar
+- Auto-updates after each conversation request
+- Hover to see detailed statistics
+- Click to view full statistics
+
+### Model Usage in Tooltip
+- Hover over models in the picker to see historical usage
+- Shows total tokens, request count, and last used time
+- Helps you track which models you use most
+
 ### View Statistics
 - Run "ChatGLM Router: Show Usage Statistics" command
 - View total requests and tokens per provider
 - See detailed per-model usage
+- Refresh statistics with confirmation feedback
 
 ### Reset Statistics
 - Run "ChatGLM Router: Reset Usage Statistics" command
@@ -93,6 +113,18 @@ Track your API usage with built-in statistics:
 - Displays detailed statistics in an output channel
 
 **Note**: Statistics are stored locally in VS Code's global state and are estimates (4 chars ≈ 1 token).
+
+### Statistics Settings {#statistics-settings}
+
+Configure in VS Code Settings under `chatglmRouter.statistics`:
+
+| Setting | Options | Default | Description |
+|---------|---------|---------|-------------|
+| `statusBar.enabled` | boolean | true | Show statistics in status bar |
+| `statusBar.displayMode` | normal, compact, minimal | normal | Status bar display mode |
+| `statusBar.timeRange` | week, month, both | both | Time range to display |
+| `statusBar.showRequestCount` | boolean | true | Show request count in status bar |
+| `modelTooltip.enabled` | boolean | true | Show usage in model tooltips |
 
 ## Development
 

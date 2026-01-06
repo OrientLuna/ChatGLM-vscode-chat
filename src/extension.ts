@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { ChatGLMRouterProvider } from "./provider";
 import { StatisticsManager } from "./statistics";
 import { StatisticsViewProvider } from "./statistics-view";
+import { StatisticsStatusBarController } from "./status-bar";
 import { getDefaultProvider, type ProviderConfig } from "./config";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -18,6 +19,21 @@ export function activate(context: vscode.ExtensionContext) {
 	// Initialize statistics manager
 	const statsManager = new StatisticsManager(context);
 	const statsView = new StatisticsViewProvider(statsManager);
+
+	// Initialize status bar controller
+	const statusBarController = new StatisticsStatusBarController(
+		context,
+		statsManager
+	);
+	statusBarController.startAutoRefresh();
+	context.subscriptions.push(statusBarController);
+
+	// Listen to statistics changes and update status bar
+	context.subscriptions.push(
+		statsManager.onDidChangeStatistics(() => {
+			statusBarController.scheduleUpdate();
+		})
+	);
 
 	// Create the router provider
 	const provider = new ChatGLMRouterProvider(context.secrets, statsManager, ua);

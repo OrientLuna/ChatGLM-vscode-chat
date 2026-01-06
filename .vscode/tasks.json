@@ -35,6 +35,31 @@
 				"npm: watch-tests"
 			],
 			"problemMatcher": []
+		},
+		{
+			"label":"clean-cache",
+			"type":"shell",
+			"command":"rm -rf ${workspaceFolder}/.vscode-test/user-data",
+			"problemMatcher":[]
+		},
+		{
+            "label": "watch-with-clean",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "clean-cache",
+                "npm: watch"
+            ],
+            "isBackground": true,
+            "problemMatcher": "$tsc-watch"
+        },
+		{
+			"label": "clean-all",
+			"dependsOrder": "sequence",
+			"dependsOn": [
+				"clean-cache",
+				"npm: watch"
+			],
+			"problemMatcher": []
 		}
 	]
 }

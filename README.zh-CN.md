@@ -2,6 +2,16 @@
 
 本插件fork自 Hugging Face 发布的`huggingface-vscode-chat`项目，修改了默认API，将 **ChatGLM**（包含GLM Coding套餐和通用端）集成给 GitHub Copilot Chat 使用。
 
+## ✨ 主要特性
+
+- 🚀 **双端点支持**：ChatGLM Coding 套餐（针对代码生成优化）和 General 通用端（对话式 AI）
+- 📊 **实时用量统计**：状态栏显示本周/本月 token 用量，悬停查看详情
+- 🔍 **模型使用追踪**：在模型选择器中查看历史用量和最后使用时间
+- ⚡ **工具调用支持**：完整的 AI 工具调用功能
+- 📈 **内置统计面板**：查看每个提供商和模型的详细使用情况
+- 🔄 **自动刷新**：统计数据在每次对话后自动更新
+- ⚙️ **灵活配置**：支持多种显示模式和自定义设置
+
 ---
 
 ## 兼容性
@@ -13,6 +23,10 @@
 *插件的开发过程使用ChatGLM Coding完成了大部分API适配工作*
 
 ---
+
+## 演示
+
+![使用演示](assets/usage.gif)
 
 ## 快速开始
 
@@ -58,8 +72,8 @@
 ### 模型选择
 
 模型使用提供商前缀标识：
-- `chatglm-coding:glm-4-plus` - ChatGLM 编程端（默认，推荐用于 VS Code）
-- `chatglm-general:glm-4-plus` - ChatGLM 通用端（需先在设置中启用）
+- `glm-4.7 (ChatGLM Coding)` - ChatGLM 编程端（默认，推荐用于 VS Code）
+- `glm-4.7 (ChatGLM General)` - ChatGLM 通用端（需先在设置中启用）
 
 **注意**：如果 ChatGLM 提供商尚未配置 API Key，该提供商仍会显示在模型选择器中。选择或使用该模型时会提示输入 API Key（非静默模式下）。
 
@@ -72,15 +86,31 @@
 | `defaultProvider` | chatglm-coding, chatglm-general | chatglm-coding | 默认使用的提供商 |
 | `enabledProviders` | 提供商数组 | [chatglm-coding] | 启用的提供商 |
 | `statistics.enabled` | 布尔值 | true | 启用使用统计跟踪 |
+| `statistics.statusBar.enabled` | 布尔值 | true | 在状态栏显示统计 |
+| `statistics.modelTooltip.enabled` | 布尔值 | true | 在模型提示中显示使用情况 |
+
+详细统计设置请参考下方的 [统计设置](#统计设置) 部分。
 
 ## 使用统计
 
 使用内置统计功能跟踪您的 API 使用情况：
 
+### 实时状态栏
+- 在 VS Code 状态栏显示本周/本月 token 用量
+- 每次对话请求后自动更新
+- 悬停查看详细统计信息
+- 点击状态栏查看完整统计
+
+### 模型使用提示
+- 在模型选择器中悬停模型查看历史用量
+- 显示总 token 数、请求数和最后使用时间
+- 帮助您跟踪最常用的模型
+
 ### 查看统计
 - 运行 "ChatGLM Router: Show Usage Statistics" 命令
 - 查看每个提供商的请求数和 token 数
 - 查看详细的每个模型的使用情况
+- 刷新统计数据时显示确认提示
 
 ### 重置统计
 - 运行 "ChatGLM Router: Reset Usage Statistics" 命令
@@ -91,6 +121,18 @@
 - 在输出通道中显示详细的统计信息
 
 **注意**：统计数据存储在 VS Code 全局状态中，为估算值（4 字符 ≈ 1 token）。
+
+### 统计设置 {#统计设置}
+
+在 VS Code 设置中的 `chatglmRouter.statistics` 下配置：
+
+| 设置 | 选项 | 默认值 | 说明 |
+|---------|---------|---------|-------------|
+| `statusBar.enabled` | 布尔值 | true | 在状态栏显示统计 |
+| `statusBar.displayMode` | normal, compact, minimal | normal | 状态栏显示模式 |
+| `statusBar.timeRange` | week, month, both | both | 显示的时间范围 |
+| `statusBar.showRequestCount` | 布尔值 | true | 在状态栏显示请求数 |
+| `modelTooltip.enabled` | 布尔值 | true | 在模型提示中显示使用情况 |
 
 ## 开发
 
