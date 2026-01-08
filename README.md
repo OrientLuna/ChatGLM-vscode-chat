@@ -27,6 +27,41 @@ A VS Code extension forked from Hugging Face's `huggingface-vscode-chat` project
 5. Select Provider (GLM Coding) and enter API Key (get one from [https://open.bigmodel.cn/](https://open.bigmodel.cn/))
 6. Choose the models you want to add to the model picker
 
+---
+
+## 📋 Roadmap
+
+**Planned features for future releases:**
+
+- [ ] **Token Alias Support** - Use custom API endpoints while maintaining unified token billing
+- [ ] **Multiple Custom Providers** - Support for other OpenAI-compatible APIs (Azure OpenAI, local LLMs, etc.)
+- [ ] **Streaming Token Usage** - Real-time token count display during chat
+- [ ] **Usage Cost Estimation** - Calculate API costs based on token consumption
+- [ ] **Export Usage Reports** - Export statistics to CSV/JSON for further analysis
+- [ ] **Usage Alerts** - Notify when approaching API quota limits
+- [ ] **Multi-language Model Names** - Support for models with non-English identifiers
+
+*Have a suggestion? Feel free to open an issue on GitHub!*
+
+---
+
+## 💖 Support This Project
+
+**Enjoy using this extension?** Your support helps me continue developing and maintaining it!
+
+🚀 **Get GLM Coding Premium at a Discount** - Use my referral link to get a special deal on GLM Coding subscription:
+- **20+ Programming Tools**: Seamlessly supports Claude Code, Cline, and more
+- **Enhanced Coding Power**: Supercharge your development workflow
+- **Limited Time Offer**: Exclusive discount for new users
+
+[Get GLM Coding Premium →](https://www.bigmodel.cn/glm-coding?ic=WLKPUYCV8E)
+
+![GLM Coding Premium](assets/BigmodelPoster.png)
+
+*By subscribing through this link, you get a premium experience while supporting the development of this extension at no extra cost. Thank you for your support! 🙏*
+
+---
+
 ## Available Models
 
 ### ChatGLM Coding (Default)
